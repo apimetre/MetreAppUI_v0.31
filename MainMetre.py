@@ -121,14 +121,14 @@ def install_from_github(root_path, install_path, auth_token, url, update_status,
                     continue
 
         cwd = os.getcwd()
-        true_root_dir, metre_dir = self.cwd.split('MetreiOS')
+        true_root_dir, metre_dir = cwd.split('MetreiOS')
 
         # Download Single Launch Lock if it's not already installed
         check_path = true_root_dir + 'site-packages/single_launch.lock'
         if os.path.exists(check_path):
             print('single_launch.lock already exists')
         else:
-            shutil.copy(self.cwd + '/resources/single_launch.lock', check_path )
+            shutil.copy(cwd + '/resources/single_launch.lock', check_path )
             print('moved copy of single_launch.lock')
 
         unzipped_dirname = z.namelist()[0]
