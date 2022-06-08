@@ -58,10 +58,7 @@ def getPrev(install_path, root_dir, fname):
 # Look for previous versions
     sortedList = sorted([x for x in os.listdir(root_dir) if x.startswith('MetreAppUI')])
     print("this is the sorted list " + str(sortedList))
-    #try:
-    #    sortedList.remove(params['git_repo'])
-    #except ValueError:
-    #    pass
+
     prev_version = sortedList[-2]
     print('this is the previous version ', prev_version)
     print('about to name src_path')
@@ -139,9 +136,7 @@ def install_from_github(root_path, install_path, auth_token, url, update_status,
         installedFileList = os.listdir(install_path)
         print('finished listing')
         return installedFileList, githubfolder[0]
-    except Exception as e:
-        print(f"Install Error: {e}")
-        return None
+
 
 def install_branch(params):
     root_install_path, update_status, config_dict = init_install_path(params['install_root_name'])
