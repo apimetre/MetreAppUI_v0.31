@@ -73,69 +73,69 @@ def install_from_github(root_path, install_path, auth_token, url, update_status,
     headers = {"Authorization": token_pyld}
     dwnld_zipfile = '/'+ url.split('/')[-1]
     local_zipfile = install_path + dwnld_zipfile
-    try:
-        r = requests.get(url, stream=True, headers=headers)
-        r.raise_for_status()
-        with open(local_zipfile, 'wb') as f:
-            block_sz = 1024
-            for chunk in r.iter_content(block_sz):
-                f.write(chunk)
-        z = zipfile.ZipFile(local_zipfile)
-        z.extractall(TEMPDIR)
-        print('V11 speaking: These are the files in the tempdir')
-        print('Update Status is ' + str(update_status))
-        githubfolder = os.listdir(TEMPDIR)
-        #print(os.listdir(TEMPDIR))
-        print(githubfolder[0])
-        print('These are the folders in tempdir/githubfolder')
-        tempsource = TEMPDIR + '/' + githubfolder[0]
-        print("THIS is tempsource " + str(tempsource))
-        print("THIS is the destination " + str(install_path))
-        print(os.listdir(tempsource))
-        allFileList = os.listdir(tempsource)
-        if not update_status:
-            for file in allFileList:
-                shutil.move(tempsource + '/' + file, install_path + '/' + file)
-            
-        else:
-            for file in allFileList:
-                print('This is the file i am looking at NOW!!!!' + file)
-            
-                if fnmatch.fnmatch(file, 'log'):
-                    if os.path.exists(install_path + '/log/log_003.json'):
-                        continue
-                    else:
-                        try:
-                            if not os.path.exists(install_path + '/log'):
-                            	os.makedirs(install_path + '/log')
-                            getPrev(install_path, root_path, 'log_003.json')
-                            getPrev(install_path, root_path, 'timezone_settings.json')
-                            getPrev(install_path, root_path, 'device_settings.json')
 
-                        except:
-                            shutil.move(tempsource + '/' + file, install_path + '/' + file)
-                            continue
-
-                else:
-                    shutil.move(tempsource + '/' + file, install_path + '/' + file)
+    r = requests.get(url, stream=True, headers=headers)
+    r.raise_for_status()
+    with open(local_zipfile, 'wb') as f:
+        block_sz = 1024
+        for chunk in r.iter_content(block_sz):
+            f.write(chunk)
+    z = zipfile.ZipFile(local_zipfile)
+    z.extractall(TEMPDIR)
+    print('V11 speaking: These are the files in the tempdir')
+    print('Update Status is ' + str(update_status))
+    githubfolder = os.listdir(TEMPDIR)
+    #print(os.listdir(TEMPDIR))
+    print(githubfolder[0])
+    print('These are the folders in tempdir/githubfolder')
+    tempsource = TEMPDIR + '/' + githubfolder[0]
+    print("THIS is tempsource " + str(tempsource))
+    print("THIS is the destination " + str(install_path))
+    print(os.listdir(tempsource))
+    allFileList = os.listdir(tempsource)
+    if not update_status:
+        for file in allFileList:
+            shutil.move(tempsource + '/' + file, install_path + '/' + file)
+        
+    else:
+        for file in allFileList:
+            print('This is the file i am looking at NOW!!!!' + file)
+        
+            if fnmatch.fnmatch(file, 'log'):
+                if os.path.exists(install_path + '/log/log_003.json'):
                     continue
+                else:
+                    try:
+                        if not os.path.exists(install_path + '/log'):
+                        	os.makedirs(install_path + '/log')
+                        getPrev(install_path, root_path, 'log_003.json')
+                        getPrev(install_path, root_path, 'timezone_settings.json')
+                        getPrev(install_path, root_path, 'device_settings.json')
 
-        cwd = os.getcwd()
-        true_root_dir, metre_dir = cwd.split('MetreiOS')
+                    except:
+                        shutil.move(tempsource + '/' + file, install_path + '/' + file)
+                        continue
 
-        # Download Single Launch Lock if it's not already installed
-        check_path = true_root_dir + 'site-packages/single_launch.lock'
-        if os.path.exists(check_path):
-            print('single_launch.lock already exists')
-        else:
-            shutil.copy(cwd + '/resources/single_launch.lock', check_path )
-            print('moved copy of single_launch.lock')
+            else:
+                shutil.move(tempsource + '/' + file, install_path + '/' + file)
+                continue
 
-        unzipped_dirname = z.namelist()[0]
-        os.remove(local_zipfile)
-        installedFileList = os.listdir(install_path)
-        print('finished listing')
-        return installedFileList, githubfolder[0]
+    cwd = os.getcwd()
+    true_root_dir, metre_dir = cwd.split('MetreiOS')
+
+    # Download Single Launch Lock if it's not already installed
+    check_path = true_root_dir + 'site-packages/single_launch.lock'
+    if os.path.exists(check_path):
+        print('single_launch.lock already exists')
+    else:
+        shutil.copy(cwd + '/resources/single_launch.lock', check_path )
+        print('moved copy of single_launch.lock')
+
+    unzipped_dirname = z.namelist()[0]
+    os.remove(local_zipfile)
+    installedFileList = os.listdir(install_path)
+    print('finished listing')
+    return installedFileList, githubfolder[0]
 
 
 def install_branch(params):
